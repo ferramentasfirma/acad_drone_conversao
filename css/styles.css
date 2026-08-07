@@ -222,16 +222,16 @@
      px starts hiding the "ACADEMIA DO" text under the header bar. Most of
      the "bleed into the hero" look comes from the crest's own height
      extending well past the header/hero seam, not from hiding under it. */
-  --header-h: 68px;
-  --crest-h: 132px;
-  --crest-overlap: 6px;
+  --header-h: 64px;
+  --crest-h: 172px;
+  --crest-overlap: 13px;
 }
 
 @media (min-width: 700px) {
-  :root { --header-h: 78px; --crest-h: 178px; --crest-overlap: 8px; }
+  :root { --header-h: 76px; --crest-h: 204px; --crest-overlap: 15px; }
 }
 @media (min-width: 1000px) {
-  :root { --header-h: 88px; --crest-h: 220px; --crest-overlap: 10px; }
+  :root { --header-h: 88px; --crest-h: 240px; --crest-overlap: 17px; }
 }
 
 /* ---------- Reset & base ---------- */
@@ -310,9 +310,14 @@ h1, h2, h3, p { margin: 0; }
 .site-header.is-scrolled { box-shadow: 0 6px 16px rgba(24,26,30,.08); }
 .header-bar {
   max-width: var(--content-max); margin: 0 auto; padding: 0 var(--gutter);
-  height: 100%; display: flex; align-items: center; justify-content: flex-end; gap: clamp(14px, 3vw, 32px);
+  height: 100%; display: flex; align-items: center; justify-content: center; gap: clamp(14px, 3vw, 32px);
 }
-.header-logo-spacer { flex: 1 1 auto; min-width: 40px; }
+.header-logo-spacer { flex: 1 1 auto; min-width: 40px; display: none; }
+
+@media (min-width: 900px) {
+  .header-bar { justify-content: flex-end; }
+  .header-logo-spacer { display: block; }
+}
 
 .main-nav { display: none; }
 .main-nav ul { list-style: none; display: flex; align-items: center; gap: clamp(16px, 2.4vw, 30px); margin: 0; padding: 0; }
@@ -362,12 +367,18 @@ h1, h2, h3, p { margin: 0; }
    wrap) — a small negative offset pokes the crest up just behind the header. */
 .brand-crest {
   position: absolute;
-  left: var(--gutter);
+  left: 50%;
+  transform: translateX(-50%);
   top: calc(-1 * var(--crest-overlap));
   height: var(--crest-h);
   width: auto;
   z-index: 20;
   filter: drop-shadow(0 10px 22px rgba(0, 7, 60, .35));
+}
+/* Desktop/tablet: match the reference layout — crest anchored to the left
+   gutter instead of centered (centering is a mobile-only treatment). */
+@media (min-width: 700px) {
+  .brand-crest { left: var(--gutter); transform: none; }
 }
 
 /* ============================================================
@@ -534,6 +545,17 @@ section { padding: var(--section-y) 0; }
 .footer-bottom-inner {
   max-width: var(--content-max); margin: 0 auto; padding: 20px var(--gutter);
   display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; font-size: var(--fs-caption); color: var(--text-on-brand-muted);
+}
+
+/* Center the whole footer on mobile (single-column layout) */
+@media (max-width: 639px) {
+  .footer-top { flex-direction: column; text-align: center; justify-content: center; }
+  .footer-top h2 { max-width: none; }
+  .footer-col, .footer-col-brand { align-items: center; text-align: center; }
+  .footer-col-brand p { max-width: none; }
+  .footer-col a, .footer-link-btn { align-self: center; }
+  .footer-badges, .social-row { justify-content: center; }
+  .footer-bottom-inner { justify-content: center; text-align: center; }
 }
 
 /* Sticky mobile CTA */
