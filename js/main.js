@@ -16,8 +16,10 @@
     return "https://wa.me/" + number.replace(/\D/g, "") + "?text=" + encodeURIComponent(message);
   }
   var headerWa = $("#whatsapp-header-link");
+  var mobileWa = $("#whatsapp-mobile-link");
   var genericLink = waLink(WHATSAPP_NUMBER, WHATSAPP_GENERIC_MSG);
   if (headerWa) headerWa.href = genericLink;
+  if (mobileWa) mobileWa.href = genericLink;
 
   // ---------- Header scroll shadow ----------
   var header = $("#site-header");
@@ -34,6 +36,29 @@
   }
   window.addEventListener("scroll", onScrollHeader, { passive: true });
   window.addEventListener("resize", onScrollHeader, { passive: true });
+
+  // ---------- Mobile nav drawer (hidden by default; toggled by the hamburger) ----------
+  var navToggle = $("#nav-toggle");
+  var navClose = $("#nav-close");
+  var mobileNav = $("#mobile-nav");
+  var mobileBackdrop = $("#mobile-nav-backdrop");
+  function openNav() {
+    mobileNav.classList.add("is-open");
+    navToggle.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+  function closeNav() {
+    mobileNav.classList.remove("is-open");
+    navToggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+  if (navToggle) navToggle.addEventListener("click", openNav);
+  if (navClose) navClose.addEventListener("click", closeNav);
+  if (mobileBackdrop) mobileBackdrop.addEventListener("click", closeNav);
+  $all(".mobile-nav-panel a").forEach(function (a) { a.addEventListener("click", closeNav); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && mobileNav.classList.contains("is-open")) closeNav();
+  });
 
   // ---------- Countdown ----------
   var cdD = $("#cd-d"), cdH = $("#cd-h"), cdM = $("#cd-m"), cdS = $("#cd-s");

@@ -304,39 +304,66 @@ h1, h2, h3, p { margin: 0; }
 .site-header {
   position: sticky; top: 0; z-index: 50;
   background: #fff; border-bottom: 1px solid var(--border-subtle);
+  height: var(--header-h);
   transition: box-shadow var(--dur-base) var(--ease-standard);
 }
 .site-header.is-scrolled { box-shadow: 0 6px 16px rgba(24,26,30,.08); }
-
-/* No hamburger: the nav is always visible, wrapping onto its own centered
-   row on narrow screens instead of hiding behind a menu button. */
 .header-bar {
-  max-width: var(--content-max); margin: 0 auto; padding: 10px var(--gutter);
-  min-height: var(--header-h);
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px clamp(14px, 3vw, 32px);
+  max-width: var(--content-max); margin: 0 auto; padding: 0 var(--gutter);
+  height: 100%; display: flex; align-items: center; justify-content: center; gap: clamp(14px, 3vw, 32px);
 }
-.header-logo-spacer { display: none; }
+.header-logo-spacer { flex: 1 1 auto; min-width: 40px; display: none; }
 
-.main-nav { flex: 1 1 100%; order: 1; }
-.main-nav ul {
-  list-style: none; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: 8px clamp(14px, 2.4vw, 30px); margin: 0; padding: 0;
+@media (min-width: 900px) {
+  .header-bar { justify-content: flex-end; }
+  .header-logo-spacer { display: block; }
 }
+
+.main-nav { display: none; }
+.main-nav ul { list-style: none; display: flex; align-items: center; gap: clamp(16px, 2.4vw, 30px); margin: 0; padding: 0; }
 .main-nav a {
-  font-weight: 700; font-size: .85rem; color: var(--text-strong); white-space: nowrap;
+  font-weight: 700; font-size: .95rem; color: var(--text-strong); white-space: nowrap;
 }
 .main-nav a:hover { color: var(--blue-700); text-decoration: none; }
 
-#whatsapp-header-link { order: 2; }
-
-@media (min-width: 900px) {
-  .header-bar { justify-content: flex-end; flex-wrap: nowrap; padding-top: 0; padding-bottom: 0; height: var(--header-h); min-height: 0; }
-  .header-logo-spacer { display: block; flex: 1 1 auto; min-width: 40px; }
-  .main-nav { flex: 0 0 auto; order: 0; }
-  .main-nav ul { flex-wrap: nowrap; gap: clamp(16px, 2.4vw, 30px); }
-  .main-nav a { font-size: .95rem; }
-  #whatsapp-header-link { order: 0; }
+.nav-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: var(--radius-sm);
+  background: transparent; border: 1.5px solid var(--border-default); color: var(--text-strong);
+  cursor: pointer;
 }
+.nav-toggle:hover { background: var(--gray-050); }
+
+/* These two must come AFTER the unconditional .main-nav/.nav-toggle rules
+   above — equal-specificity cascade falls back to source order, so if the
+   base .nav-toggle{display:inline-flex} rule were declared later than this
+   block, it would win at >=900px and the hamburger would never hide. */
+@media (min-width: 900px) {
+  .main-nav { display: block; }
+  .nav-toggle { display: none; }
+}
+
+/* Mobile nav drawer — hidden by default, opened via the hamburger button. */
+.mobile-nav {
+  position: fixed; inset: 0; z-index: 70; display: none;
+}
+.mobile-nav.is-open { display: block; }
+.mobile-nav-backdrop { position: absolute; inset: 0; background: rgba(6,10,40,.5); }
+.mobile-nav-panel {
+  position: absolute; top: 0; right: 0; bottom: 0; width: min(320px, 84vw);
+  background: #fff; box-shadow: var(--shadow-menu);
+  padding: 18px var(--gutter) 28px; display: flex; flex-direction: column; gap: 4px;
+  animation: adb-slide-in .22s var(--ease-standard) both;
+}
+@keyframes adb-slide-in { from { transform: translateX(24px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.mobile-nav-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.mobile-nav-header img { height: 40px; width: auto; }
+.mobile-nav-panel a {
+  display: block; padding: 14px 4px; font-weight: 700; font-size: 1.05rem; color: var(--text-strong);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.mobile-nav-panel a:hover { color: var(--blue-700); text-decoration: none; }
+.mobile-nav-panel .btn { margin-top: 18px; }
 
 /* The crest logo, overlapping the header/hero boundary. Positioned relative
    to .crest-hero-wrap, whose top edge IS the header/hero seam (the header
